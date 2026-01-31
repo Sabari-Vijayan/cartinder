@@ -1,0 +1,130 @@
+A. Users collection handles Authentication, Roles, and Admin Bans 
+
+// Collection: users
+{
+  "_id": ObjectId("user_101"),
+  "name": "John Doe",
+  "email": "john@example.com",
+  "roles": ["buyer", "dealer", "admin"], //Can only be one so maybe remove array when implemented 
+  "is_banned": false, // Admin can toggle this to true
+  "account_status": ["active", "suspended", "under_review"],
+  "profile_pic": "url_to_s3",
+  "saved_payment_methods": [ ... ] // Tokens from Razorpay
+}
+
+B. Car collection, unique ID will be the number plate 
+
+// Collection: cars
+{
+  "_id": ObjectId("car_555"),
+  "dealer_id": ObjectId("user_101"), // Reference to the owner
+  
+  // Unique Index needed here on 'license_plate'
+  "license_plate": "MH12-AB-1234", 
+  
+  "specs": {
+    "make": "Toyota",
+    "model": "Fortuner",
+    "year": 2022,
+    "transmission": "Automatic"
+  },
+  
+  "status": ["available", "rented", "maintenance", "booked", "reapir", "broke_down"], // Can only be one of these option so remove array when implementing this 
+  
+  "stats": {
+    "total_trips": 45,
+    "total_kms": 12500,
+    "last_service_date": ISODate("2025-12-01"),
+    "avg_rating": 4.8, // Pre-calculated for fast display
+    "review_count": 12
+  },
+
+  "location": {
+    "type": "Point",
+    "coordinates": [72.8777, 19.0760] // [Long, Lat]
+  },
+
+  "rates": {
+    "currency": "INR",
+    "per_hour": 500,        // Null if not offered
+    "per_day": 4000,        // Standard daily rate
+    "per_km": 15,           // Optional: extra charge per KM
+    "min_booking_hours": 4, // Constraint example
+    "security_deposit": 2000
+  },
+
+  // CRITICAL: Arrays for quick availability checks
+  "booked_dates": [
+    { "start": ISODate("2026-02-01"), "end": ISODate("2026-02-05") }
+  ]
+}
+
+C. Bookings collection, this will link the user, dealer, and car
+
+// Collection: bookings
+{
+  "_id": ObjectId("booking_999"),
+  "car_id": ObjectId("car_555"),
+  "renter_id": ObjectId("user_202"),
+  "dealer_id": ObjectId("user_101"), 
+  
+  "time_slot": {
+    "start": ISODate("2026-02-01T10:00:00Z"),
+    "end": ISODate("2026-02-05T10:00:00Z")
+  },
+  
+  // Status of the booking lifecycle
+  "status": "confirmed", // pending_payment, confirmed, active, completed, cancelled
+  
+  // 1. THE PRICING SNAPSHOT (The "Bill")
+  // We save exactly how we calculated the cost at the moment of booking.
+  "pricing_snapshot": {
+    "rate_type": "per_day", // Options: "per_hour", "per_day", "per_km", "custom_negotiated"
+    "unit_price": 4000,     // The rate at that moment (e.g., 4000/day)
+    "units_booked": 4,      // e.g., 4 days
+    "extra_charges": {      // Any add-ons
+        "security_deposit": 2000,
+        "delivery_fee": 500
+    },
+    "subtotal": 18500,      // (4000 * 4) + 2000 + 500
+    "platform_fee": 500     // Your cut
+  },
+
+  // 2. THE PAYMENT TRANSACTION (The "Receipt")
+  // This tracks the actual money movement via Razorpay.
+  "payment": {
+    "transaction_id": "pay_Hj7...", // Razorpay Payment ID
+    "order_id": "order_Hj7...",     // Razorpay Order ID
+    "amount_paid": 19000,           // Final Total (Subtotal + Platform Fee)
+    "currency": "INR",
+    "status": "captured",           // created, authorized, captured, failed, refunded
+    "method": "upi",                // card, netbanking, upi
+    "timestamp": ISODate("2026-01-24T10:05:00Z")
+  }
+}
+
+D. Car reviews 
+
+// Collection: reviews
+{
+  "car_id": ObjectId("car_555"),
+  "reviewer_id": ObjectId("user_202"),
+  "rating": 5,
+  "comment": "Car was clean and ran smoothly.",
+  "created_at": ISODate("2026-02-06")
+}
+
+E. Chats collection, we will be using a conversation model here
+
+{
+  "_id": ObjectId("chat_888"),
+  "participants": [ObjectId("user_101"), ObjectId("user_202")], // Dealer & Renter
+  "last_message": "Hey, where do I pick up the keys?",
+  "last_updated": ISODate("2026-01-24T10:30:00")
+}
+
+//NOTES
+
+1. One post per car 
+db.cars.createIndex({ "license_plate": 1 }, { unique: true })
+
