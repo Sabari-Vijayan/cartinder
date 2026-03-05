@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface ICar extends Document {
   dealer_id: mongoose.Types.ObjectId;
   license_plate: string;
+  image_url?: string;
   specs: {
     make: string;
     model: string;
@@ -38,6 +39,7 @@ export interface ICar extends Document {
 const CarSchema: Schema = new Schema({
   dealer_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   license_plate: { type: String, required: true, unique: true },
+  image_url: { type: String },
   specs: {
     make: { type: String, required: true },
     model: { type: String, required: true },

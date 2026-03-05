@@ -2,7 +2,8 @@ import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import User from './models/User'; // Fixed import
+import User from './models/User';
+import Car from './models/Car';
 
 dotenv.config();
 
@@ -29,14 +30,25 @@ app.get('/api/users', async (req: Request, res: Response) => {
   }
 });
 
-// GET single user
-app.get('/api/users/:id', async (req: Request, res: Response) => {
+// GET all cars
+app.get('/api/cars', async (req: Request, res: Response) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user);
+    const cars = await Car.find();
+    res.status(200).json(cars);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({ message: "Error fetching cars", error });
+  }
+});
+
+// POST a new car
+app.post('/api/cars', async (req: Request, res: Response) => {
+  try {
+    // Note: In a real app, you'd get dealer_id from auth session
+    const newCar = new Car(req.body);
+    await newCar.save();
+    res.status(201).json(newCar);
+  } catch (error) {
+    res.status(400).json({ message: "Error adding car", error });
   }
 });
 
