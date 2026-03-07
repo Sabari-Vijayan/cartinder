@@ -1,0 +1,191 @@
+.likes-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-dark);
+  padding: 1.5rem;
+  overflow-y: auto;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .likes-page {
+    max-width: 900px;
+    margin: 0 auto;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 2.5rem;
+  }
+}
+
+.likes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.likes-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.likes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.liked-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.liked-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.liked-image {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.liked-overlay {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+.like-badge {
+  background: rgba(15, 17, 21, 0.5);
+  backdrop-filter: blur(8px);
+  padding: 0.375rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  color: var(--primary-color);
+}
+
+.liked-info {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.liked-info h3 {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.liked-info .year {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.liked-info .location {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.liked-info .rating-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffcc00;
+  margin-top: 0.25rem;
+}
+
+.liked-info .rating-row span {
+  color: var(--text-secondary);
+}
+
+.liked-info .price {
+  margin: 0.75rem 0;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.card-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.message-dealer-btn, .book-now-btn {
+  width: 100%;
+  padding: 0.625rem;
+  border-radius: var(--radius-lg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.message-dealer-btn {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.message-dealer-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.book-now-btn {
+  background: var(--primary-gradient);
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(244, 63, 94, 0.2);
+}
+
+.book-now-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 10px -1px rgba(244, 63, 94, 0.3);
+}
+
+.swipe-more-btn {
+  margin: 2rem auto;
+  padding: 0.875rem 2rem;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.swipe-more-btn:hover {
+  background: var(--bg-elevated);
+  transform: translateY(-1px);
+}

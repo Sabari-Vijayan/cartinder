@@ -37,6 +37,8 @@ const mongoose_1 = __importStar(require("mongoose"));
 const CarSchema = new mongoose_1.Schema({
     dealer_id: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
     license_plate: { type: String, required: true, unique: true },
+    image_url: { type: String },
+    description: { type: String },
     specs: {
         make: { type: String, required: true },
         model: { type: String, required: true },

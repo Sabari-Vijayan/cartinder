@@ -4,6 +4,7 @@ export interface ICar extends Document {
   dealer_id: mongoose.Types.ObjectId;
   license_plate: string;
   image_url?: string;
+  description?: string;
   specs: {
     make: string;
     model: string;
@@ -40,6 +41,7 @@ const CarSchema: Schema = new Schema({
   dealer_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   license_plate: { type: String, required: true, unique: true },
   image_url: { type: String },
+  description: { type: String },
   specs: {
     make: { type: String, required: true },
     model: { type: String, required: true },

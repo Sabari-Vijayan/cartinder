@@ -1,0 +1,15 @@
+meta {
+  name: Get My Bookings
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/bookings/my
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

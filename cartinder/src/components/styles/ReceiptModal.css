@@ -1,0 +1,121 @@
+.receipt-modal {
+  background: var(--bg-surface);
+  width: 100%;
+  max-width: 500px;
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalScale 0.3s ease-out;
+}
+
+@keyframes modalScale {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.receipt-content {
+  padding: 2rem;
+  color: var(--text-primary);
+}
+
+.receipt-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-bottom: 1.5rem;
+}
+
+.receipt-header h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-top: 0.5rem;
+}
+
+.receipt-id {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.receipt-section {
+  margin-bottom: 1.5rem;
+}
+
+.receipt-section h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+}
+
+.receipt-row .label {
+  color: var(--text-secondary);
+}
+
+.receipt-row .value {
+  font-weight: 600;
+}
+
+.receipt-total-box {
+  background: var(--bg-elevated);
+  padding: 1.25rem;
+  border-radius: var(--radius-xl);
+  margin-top: 1rem;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary-color);
+}
+
+.payment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
+.receipt-footer {
+  padding: 1.5rem;
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  gap: 1rem;
+}
+
+.download-btn {
+  flex: 1;
+  padding: 0.875rem;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-radius: var(--radius-lg);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.download-btn:hover {
+  background: var(--bg-hover);
+}

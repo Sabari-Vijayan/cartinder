@@ -16,7 +16,8 @@ const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const User_1 = __importDefault(require("./models/User")); // Fixed import
+const User_1 = __importDefault(require("./models/User"));
+const Car_1 = __importDefault(require("./models/Car"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
@@ -38,16 +39,26 @@ app.get('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ message: "Error fetching users", error });
     }
 }));
-// GET single user
-app.get('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+// GET all cars
+app.get('/api/cars', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield User_1.default.findById(req.params.id);
-        if (!user)
-            return res.status(404).json({ message: "User not found" });
-        res.json(user);
+        const cars = yield Car_1.default.find();
+        res.status(200).json(cars);
     }
     catch (error) {
-        res.status(500).json({ message: "Server error", error });
+        res.status(500).json({ message: "Error fetching cars", error });
+    }
+}));
+// POST a new car
+app.post('/api/cars', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Note: In a real app, you'd get dealer_id from auth session
+        const newCar = new Car_1.default(req.body);
+        yield newCar.save();
+        res.status(201).json(newCar);
+    }
+    catch (error) {
+        res.status(400).json({ message: "Error adding car", error });
     }
 }));
 // Single Database Connection Logic
