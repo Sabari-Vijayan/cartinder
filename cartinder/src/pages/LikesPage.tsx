@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import { ArrowLeft, Star, MapPin, MessageCircle, CreditCard } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, MessageCircle, CreditCard, Trash2 } from 'lucide-react';
 import './styles/LikesPage.css';
 
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800";
@@ -34,6 +34,16 @@ const LikesPage: React.FC = () => {
     }
   };
 
+  const handleRemoveLike = async (carId: string) => {
+    if (!window.confirm('Remove this car from your saved rides?')) return;
+    try {
+      await api.delete(`/swipes/${carId}`);
+      setLikedCars(prev => prev.filter(car => car._id !== carId));
+    } catch (error) {
+      console.error('Error removing like:', error);
+    }
+  };
+
   if (loading) return <div className="loading-screen">Loading your matches...</div>;
 
   return (
@@ -61,7 +71,16 @@ const LikesPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="liked-info">
-                  <h3>{car.specs?.make} {car.specs?.model} <span className="year">{car.specs?.year}</span></h3>
+                  <div className="title-row">
+                    <h3>{car.specs?.make} {car.specs?.model} <span className="year">{car.specs?.year}</span></h3>
+                    <button 
+                      className="remove-like-btn"
+                      onClick={() => handleRemoveLike(car._id)}
+                      title="Remove from saved"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                   <p className="location">
                     <MapPin size={12} /> {car.location?.type === 'Point' ? 'Nearby' : 'Global'}
                   </p>

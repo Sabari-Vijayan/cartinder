@@ -85,6 +85,33 @@
   flex-direction: column;
 }
 
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.remove-like-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.remove-like-btn:hover {
+  background: rgba(244, 63, 94, 0.1);
+  color: #f43f5e;
+  transform: scale(1.1);
+}
+
 .liked-info h3 {
   margin: 0;
   font-size: 0.9375rem;

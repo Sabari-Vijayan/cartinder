@@ -5,6 +5,8 @@ import BottomBar from './components/BottomBar.tsx';
 import SideBar from './components/SideBar.tsx';
 import LoginPage from './pages/auth/LoginPage.tsx';
 import RegisterPage from './pages/auth/RegisterPage.tsx';
+import ForgotPassword from './pages/auth/ForgotPassword.tsx';
+import ResetPassword from './pages/auth/ResetPassword.tsx';
 import ProfilePage from './pages/ProfilePage.tsx';
 import LikesPage from './pages/LikesPage.tsx';
 import DealerDashboard from './pages/DealerDashboard.tsx';
@@ -46,6 +48,8 @@ const AppContent = () => {
     <Routes>
       <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
       <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/" />} />
+      <Route path="/forgot-password" element={!user ? <ForgotPassword /> : <Navigate to="/" />} />
+      <Route path="/reset-password/:token" element={!user ? <ResetPassword /> : <Navigate to="/" />} />
       
       <Route
         path="/"

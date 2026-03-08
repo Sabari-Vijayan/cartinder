@@ -6,4 +6,5 @@ const authMiddleware_1 = require("../middleware/authMiddleware");
 const router = (0, express_1.Router)();
 router.post('/', authMiddleware_1.protect, swipeController_1.recordSwipe);
 router.get('/likes', authMiddleware_1.protect, swipeController_1.getLikedCars);
+router.delete('/:carId', authMiddleware_1.protect, swipeController_1.removeSwipe);
 exports.default = router;

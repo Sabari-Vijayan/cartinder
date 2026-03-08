@@ -44,10 +44,24 @@ const fetchAllCars = (userId_1, ...args_1) => __awaiter(void 0, [userId_1, ...ar
     const page = filters.page || 1;
     const limit = filters.limit || 20;
     const skip = (page - 1) * limit;
-    return yield Car_1.default.find(query)
+    let cars = yield Car_1.default.find(query)
         .populate('dealer_id', 'name email profile')
         .skip(skip)
         .limit(limit);
+    // If no new cars found and it's a search, try including 'passed' cars to make it "infinite"
+    if (cars.length === 0 && userId) {
+        const likedCarIds = yield Swipe_1.default.find({
+            user_id: userId,
+            action: { $in: ['like', 'superlike'] }
+        }).distinct('car_id');
+        const infiniteQuery = Object.assign({}, query);
+        infiniteQuery._id = { $nin: likedCarIds };
+        cars = yield Car_1.default.find(infiniteQuery)
+            .populate('dealer_id', 'name email profile')
+            .skip(skip)
+            .limit(limit);
+    }
+    return cars;
 });
 exports.fetchAllCars = fetchAllCars;
 const createNewCar = (carData) => __awaiter(void 0, void 0, void 0, function* () {

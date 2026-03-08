@@ -32,6 +32,7 @@ const RegisterPage: React.FC = () => {
   return (
     <div className="auth-container fade-in">
       <div className="auth-card">
+        <img src="/logo.png" alt="CarTinder" style={{ width: '64px', height: '64px', margin: '0 auto 1rem', display: 'block', objectFit: 'contain' }} />
         <h1>CarTinder</h1>
         <p>Join the movement</p>
         

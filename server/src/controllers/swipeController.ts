@@ -13,9 +13,11 @@ export const recordSwipe = async (req: AuthRequest, res: Response) => {
     }
 
     // Check if the user already swiped on this car
-    const existingSwipe = await Swipe.findOne({ user_id, car_id });
-    if (existingSwipe) {
-       res.status(400).json({ message: 'Already swiped on this car' });
+    let swipe = await Swipe.findOne({ user_id, car_id });
+    if (swipe) {
+       swipe.action = action;
+       await swipe.save();
+       res.status(200).json({ message: 'Swipe updated', swipe });
        return;
     }
 
@@ -30,6 +32,24 @@ export const recordSwipe = async (req: AuthRequest, res: Response) => {
     res.status(201).json({ message: 'Swipe recorded', swipe: newSwipe });
   } catch (error) {
     res.status(500).json({ message: 'Error recording swipe', error: (error as Error).message });
+  }
+};
+
+// Remove a swipe (e.g. to "unlike" a car)
+export const removeSwipe = async (req: AuthRequest, res: Response) => {
+  try {
+    const { carId } = req.params;
+    const user_id = req.user._id;
+
+    const result = await Swipe.deleteOne({ user_id, car_id: carId });
+    if (result.deletedCount === 0) {
+      res.status(404).json({ message: 'Swipe not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'Swipe removed successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error removing swipe', error: (error as Error).message });
   }
 };
 

@@ -21,14 +21,8 @@ const SideBar: React.FC<SideBarProps> = ({ onFilterClick }) => {
   return (
     <div className='sidebar-container'>
       <div className="sidebar-brand">
-        <Flame size={32} className="flame-icon" fill="url(#tinder-grad-sidebar)" />
+        <img src="/logo.png" alt="CarTinder" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
         <span>CarTinder</span>
-        <svg width="0" height="0">
-          <linearGradient id="tinder-grad-sidebar" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop stopColor="#fd297b" offset="0%" />
-            <stop stopColor="#ff655b" offset="100%" />
-          </linearGradient>
-        </svg>
       </div>
 
       <nav className='sidebar-nav'>

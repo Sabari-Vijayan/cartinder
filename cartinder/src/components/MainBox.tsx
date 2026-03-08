@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../services/api";
-import { X, Heart, Star, Info, Flame } from 'lucide-react';
+import { X, Heart, Star, Info } from 'lucide-react';
 import "./styles/MainBox.css";
 import CarDetailModal from "./CarDetailModal";
 
@@ -42,6 +42,20 @@ const MainBox = ({ filters = {} }: MainBoxProps) => {
 
       const response = await api.get(`/cars?${params.toString()}`);
       const data = response.data;
+
+      if (data.length === 0 && pageNum > 1) {
+        // Loop back to page 1 if we've run out of cars on this page
+        setPage(1);
+        fetchData(1);
+        return;
+      }
+
+      if (data.length === 0 && pageNum === 1) {
+         setCards([]);
+         setDbPool([]);
+         setLoading(false);
+         return;
+      }
 
       if (isInitial) {
         setDbPool(data);
@@ -205,7 +219,7 @@ const MainBox = ({ filters = {} }: MainBoxProps) => {
           ) : (
             <div className="empty-state fade-in">
               <div className="empty-pulse">
-                 <Flame size={48} fill="white" color="white" />
+                 <img src="/logo.png" alt="Empty" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
               </div>
               <h2>All caught up!</h2>
               <p>No more rides in your area. Check back later or adjust your filters.</p>

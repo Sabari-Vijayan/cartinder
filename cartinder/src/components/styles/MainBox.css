@@ -15,9 +15,15 @@
   place-items: center;
   width: 100%;
   height: 100%;
-  max-height: 80vh;
+  max-height: 75vh;
   position: relative;
   box-sizing: border-box;
+}
+
+@media (max-height: 720px) {
+  .card-stack {
+    max-height: 70vh;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -52,13 +58,23 @@
 }
 
 .card-overlay {
-  padding: 3rem 1.5rem 2rem 1.5rem;
+  padding: 3rem 1.25rem 1.75rem 1.25rem;
   background: linear-gradient(to top, 
     rgba(15, 17, 21, 0.95) 0%, 
     rgba(15, 17, 21, 0.6) 50%, 
     transparent 100%);
   color: var(--text-primary);
   text-align: left;
+}
+
+@media (max-width: 380px) {
+  .card-overlay {
+    padding: 2rem 1rem 1.25rem 1rem;
+  }
+  
+  .card-header-info h2 {
+    font-size: 1.5rem;
+  }
 }
 
 .card-header-info {
@@ -135,17 +151,34 @@
 /* Action Buttons */
 .action-buttons {
   position: absolute;
-  bottom: 1.5rem;
+  bottom: 1.25rem;
   left: 0;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1.25rem;
-  padding: 0 1.5rem;
+  padding: 0 1.25rem;
   box-sizing: border-box;
   z-index: 30;
   pointer-events: none;
+}
+
+@media (max-width: 380px) {
+  .action-buttons {
+    bottom: 1rem;
+    gap: 0.875rem;
+  }
+  
+  .action-btn {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .btn-super {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 .action-btn {

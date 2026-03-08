@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLikedCars = exports.recordSwipe = void 0;
+exports.getLikedCars = exports.removeSwipe = exports.recordSwipe = void 0;
 const Swipe_1 = __importDefault(require("../models/Swipe"));
 const recordSwipe = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -23,9 +23,11 @@ const recordSwipe = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             return;
         }
         // Check if the user already swiped on this car
-        const existingSwipe = yield Swipe_1.default.findOne({ user_id, car_id });
-        if (existingSwipe) {
-            res.status(400).json({ message: 'Already swiped on this car' });
+        let swipe = yield Swipe_1.default.findOne({ user_id, car_id });
+        if (swipe) {
+            swipe.action = action;
+            yield swipe.save();
+            res.status(200).json({ message: 'Swipe updated', swipe });
             return;
         }
         const newSwipe = new Swipe_1.default({
@@ -41,6 +43,23 @@ const recordSwipe = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.recordSwipe = recordSwipe;
+// Remove a swipe (e.g. to "unlike" a car)
+const removeSwipe = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { carId } = req.params;
+        const user_id = req.user._id;
+        const result = yield Swipe_1.default.deleteOne({ user_id, car_id: carId });
+        if (result.deletedCount === 0) {
+            res.status(404).json({ message: 'Swipe not found' });
+            return;
+        }
+        res.status(200).json({ message: 'Swipe removed successfully' });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Error removing swipe', error: error.message });
+    }
+});
+exports.removeSwipe = removeSwipe;
 // Get all cars the logged-in user has "liked" or "superliked"
 const getLikedCars = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

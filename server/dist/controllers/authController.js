@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.register = void 0;
+exports.resetPassword = exports.forgotPassword = exports.login = exports.register = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const crypto_1 = __importDefault(require("crypto"));
 const User_1 = __importDefault(require("../models/User"));
 const JWT_SECRET = process.env.JWT_SECRET || 'your_weekend_project_secret_key_123';
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -98,3 +99,64 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.login = login;
+const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email } = req.body;
+        const user = yield User_1.default.findOne({ email });
+        if (!user) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+        // Generate reset token
+        const resetToken = crypto_1.default.randomBytes(20).toString('hex');
+        // Hash token and set to resetPasswordToken field
+        user.resetPasswordToken = crypto_1.default
+            .createHash('sha256')
+            .update(resetToken)
+            .digest('hex');
+        // Set expire (1 hour)
+        user.resetPasswordExpire = new Date(Date.now() + 60 * 60 * 1000);
+        yield user.save();
+        // In a real app, send email here. For now, we'll return it in the response 
+        // or log it for development purposes.
+        const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+        console.log(`Password reset link: ${resetUrl}`);
+        res.status(200).json({
+            message: 'Password reset link sent to email (check console in dev)',
+            resetToken: process.env.NODE_ENV === 'development' ? resetToken : undefined // Only return in dev for ease of testing
+        });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Error in forgot password', error: error.message });
+    }
+});
+exports.forgotPassword = forgotPassword;
+const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { token } = req.params;
+        const { password } = req.body;
+        // Hash token to compare with stored token
+        const resetPasswordToken = crypto_1.default
+            .createHash('sha256')
+            .update(token)
+            .digest('hex');
+        const user = yield User_1.default.findOne({
+            resetPasswordToken,
+            resetPasswordExpire: { $gt: Date.now() }
+        });
+        if (!user) {
+            res.status(400).json({ message: 'Invalid or expired token' });
+            return;
+        }
+        // Set new password
+        user.password = password;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        yield user.save();
+        res.status(200).json({ message: 'Password reset successful' });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Error resetting password', error: error.message });
+    }
+});
+exports.resetPassword = resetPassword;

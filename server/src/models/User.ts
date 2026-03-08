@@ -23,6 +23,8 @@ export interface IUser extends Document {
     vpa?: string;
     is_default?: boolean;
   }[];
+  resetPasswordToken?: string;
+  resetPasswordExpire?: Date;
   comparePassword(password: string): Promise<boolean>;
 }
 
@@ -55,7 +57,9 @@ const UserSchema: Schema = new Schema({
     last4: { type: String },                       // Optional (for cards)
     vpa: { type: String },                         // Optional (for UPI)
     is_default: { type: Boolean, default: false }
-  }]
+  }],
+  resetPasswordToken: String,
+  resetPasswordExpire: Date
 }, {
   timestamps: true
 });

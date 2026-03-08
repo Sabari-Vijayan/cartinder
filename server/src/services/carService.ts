@@ -44,10 +44,28 @@ export const fetchAllCars = async (userId?: string, filters: CarFilters = {}) =>
     const limit = filters.limit || 20;
     const skip = (page - 1) * limit;
 
-    return await Car.find(query)
+    let cars = await Car.find(query)
       .populate('dealer_id', 'name email profile')
       .skip(skip)
       .limit(limit);
+
+    // If no new cars found and it's a search, try including 'passed' cars to make it "infinite"
+    if (cars.length === 0 && userId) {
+      const likedCarIds = await Swipe.find({ 
+        user_id: userId, 
+        action: { $in: ['like', 'superlike'] } 
+      }).distinct('car_id');
+      
+      const infiniteQuery = { ...query };
+      infiniteQuery._id = { $nin: likedCarIds };
+      
+      cars = await Car.find(infiniteQuery)
+        .populate('dealer_id', 'name email profile')
+        .skip(skip)
+        .limit(limit);
+    }
+
+    return cars;
 };
 
 export const createNewCar = async (carData: Partial<ICar>) => {

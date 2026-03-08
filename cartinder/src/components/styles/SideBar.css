@@ -22,6 +22,9 @@
   font-size: 1.75rem;
   font-weight: 800;
   margin-bottom: 3rem;
+}
+
+.sidebar-brand span {
   background: var(--primary-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
