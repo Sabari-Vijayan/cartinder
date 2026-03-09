@@ -45,7 +45,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCar = exports.updateCar = exports.createCar = exports.getDealerCars = exports.getAllCars = void 0;
+exports.deleteCar = exports.updateCar = exports.createCar = exports.getDealerCars = exports.getCarById = exports.getAllCars = void 0;
 const CarService = __importStar(require("../services/carService"));
 const Car_1 = __importDefault(require("../models/Car"));
 const getAllCars = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -70,6 +70,21 @@ const getAllCars = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.getAllCars = getAllCars;
+const getCarById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const car = yield Car_1.default.findById(id).populate('dealer_id', 'name email profile');
+        if (!car) {
+            res.status(404).json({ message: "Car not found" });
+            return;
+        }
+        res.status(200).json(car);
+    }
+    catch (error) {
+        res.status(500).json({ message: "Error fetching car details", error: error.message });
+    }
+});
+exports.getCarById = getCarById;
 const getDealerCars = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const dealer_id = req.user._id;

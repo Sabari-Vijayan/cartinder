@@ -21,9 +21,8 @@ const BookingPage: React.FC = () => {
   useEffect(() => {
     const fetchCar = async () => {
       try {
-        const response = await api.get('/cars');
-        const foundCar = response.data.find((c: any) => c._id === carId);
-        setCar(foundCar);
+        const response = await api.get(`/cars/${carId}`);
+        setCar(response.data);
       } catch (error) {
         console.error('Error fetching car:', error);
       } finally {

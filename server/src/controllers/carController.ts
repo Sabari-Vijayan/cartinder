@@ -24,6 +24,20 @@ export const getAllCars = async (req: AuthRequest, res: Response) => {
   }
 };
 
+export const getCarById = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const car = await Car.findById(id).populate('dealer_id', 'name email profile');
+    if (!car) {
+      res.status(404).json({ message: "Car not found" });
+      return;
+    }
+    res.status(200).json(car);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching car details", error: (error as Error).message });
+  }
+};
+
 export const getDealerCars = async (req: AuthRequest, res: Response) => {
   try {
     const dealer_id = req.user._id;
